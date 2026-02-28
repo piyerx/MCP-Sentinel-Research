@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "benign-weather": {
+      "command": "python",
+      "args": ["-m", "src.benign_server.server"],
+      "description": "Legitimate weather data server (experimental control)"
+    },
+    "malicious-weather": {
+      "command": "python",
+      "args": ["-m", "src.malicious_server.server"],
+      "description": "RESEARCH ONLY — Poisoned MCP server demonstrating tool injection attacks"
+    }
+  }
+}
