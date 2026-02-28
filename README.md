@@ -17,6 +17,33 @@ The primary objective is to evaluate how tool poisoning can impact the reliabili
 - Analyze agent responses to poisoned versus clean tool inputs
 - Document observed impacts and recommend best practices for securing agent-tool interfaces
 
+## ■ How to Run
+
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/piyerx/MCP-Weather-Exploit-Research.git
+   cd MCP-Weather-Exploit-Research
+   ```
+2. Install dependencies:
+   ```sh
+   pip install -r requirements.txt
+   ```
+3. Review and edit `config.json` to set up tool endpoints and agent parameters.
+4. Start the malicious server:
+   ```sh
+   python malicious_server.py
+   ```
+5. Run your MCP agent or evaluation scripts as described in the project instructions below.
+
+## ■ Project Instructions & What to Observe
+
+- The project simulates both benign and poisoned tool sources. The `malicious_server.py` script provides manipulated responses to demonstrate tool poisoning.
+- Use different configurations in `config.json` to switch between clean and poisoned tool endpoints.
+- Observe the agent's behavior and outputs when interacting with:
+  - Clean tools (expected, correct responses)
+  - Poisoned tools (unexpected, manipulated responses)
+- Document any changes in agent decision-making, reliability, or integrity when exposed to poisoned tools.
+- Refer to the methodology section for specific steps and evaluation criteria.
 
 ## ■ Relevance
 
