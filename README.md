@@ -78,6 +78,11 @@ pip install -r requirements.txt
 
 ### Running the Demonstration
 
+Navigate to the vulnerability lab directory first:
+```sh
+cd 01_vulnerability_lab
+```
+
 1. **View Attack Demo** (No server required):
    ```sh
    python test_client.py --demo
