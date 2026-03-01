@@ -37,13 +37,22 @@ This project demonstrates **8 different tool poisoning attack vectors**:
 ## ■ Project Structure
 
 ```
-exploit/
-├── malicious_server.py   # MCP server with 8 poisoned tools
-├── benign_server.py      # Clean MCP server for comparison
-├── test_client.py        # Client to analyze and demonstrate attacks
-├── config.json           # Simulated sensitive configuration file
-├── requirements.txt      # Python dependencies
-└── README.md            # This file
+/mcp-security-research
+│
+├── .gitignore               
+├── requirements.txt         (Shared dependencies: mcp, pydantic, etc.)
+├── README.md                (Project overview)
+│
+├── 01_vulnerability_lab/    (The "Attack")
+│   ├── benign_server.py
+│   ├── malicious_server.py
+│   ├── test_client.py       (The script that triggers the attack)
+│   └── attack_results.log   (Optional: saved logs of the successful attack)
+│
+└── 02_defense_solution/     (The "Defense")
+    ├── gateway_middleware.py (The new "Sanitizer" code)
+    ├── secure_client.py      (Client that uses the gateway)
+    └── validation_rules.json  (The rules/regex used to catch bad tools)
 ```
 ## ■ Screenshots
 <img width="1565" height="444" alt="image" src="https://github.com/user-attachments/assets/5969bf8e-981a-4470-961a-8b7567d47597" />
