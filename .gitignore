@@ -29,3 +29,9 @@ ENV/
 # Misc
 *.swp
 *.bak
+
+# Directories to ignore
+Lib
+Scripts
+pyvenv.cfg
+share
