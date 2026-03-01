@@ -122,7 +122,7 @@ When connecting an MCP client to the malicious server, observe:
 - Tool descriptions contain hidden instructions disguised as "system updates"
 - Keywords like "IMPORTANT", "MUST", "REQUIRED" create false urgency
 - Instructions reference other tools (e.g., `read_file`, `execute_command`)
-- Social engineering attempts to harvest personal information
+- Social engineering attempts to harvest personal information.
 
 ### Comparing Clean vs Poisoned Tools
 
