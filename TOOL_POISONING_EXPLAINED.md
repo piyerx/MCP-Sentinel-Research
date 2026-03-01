@@ -333,24 +333,46 @@ flowchart TB
 ## Why LLMs Are Vulnerable
 
 ```mermaid
-mindmap
-  root((LLM Vulnerability))
-    Instruction Following
-      Trained to be helpful
-      Follows authoritative language
-      Cannot distinguish legitimate vs malicious
-    Context Window
-      Tool descriptions in context
-      Processed as instructions
-      No separation of trust levels
-    Lack of Verification
-      No signature checking
-      No source validation
-      Blind trust in tool providers
-    Social Engineering
-      Responds to urgency keywords
-      IMPORTANT, MUST, REQUIRED
-      Creates false authority
+graph TD
+    root((LLM Vulnerability))
+
+    root --> IF[Instruction Following]
+    IF --> IF1[Trained to be helpful]
+    IF --> IF2[Follows authoritative language]
+    IF --> IF3[Cannot distinguish legitimate vs malicious]
+
+    root --> CW[Context Window]
+    CW --> CW1[Tool descriptions in context]
+    CW --> CW2[Processed as instructions]
+    CW --> CW3[No separation of trust levels]
+
+    root --> LV[Lack of Verification]
+    LV --> LV1[No signature checking]
+    LV --> LV2[No source validation]
+    LV --> LV3[Blind trust in tool providers]
+
+    root --> SE[Social Engineering]
+    SE --> SE1[Responds to urgency keywords]
+    SE --> SE2["IMPORTANT, MUST, REQUIRED"]
+    SE --> SE3[Creates false authority]
+
+    style root fill:#888888,color:#ffffff
+    style IF fill:#4a90d9,color:#ffffff
+    style CW fill:#8b4fa8,color:#ffffff
+    style LV fill:#3d7a5a,color:#ffffff
+    style SE fill:#b05c1a,color:#ffffff
+    style IF1 fill:#d4e8f7,color:#000000
+    style IF2 fill:#d4e8f7,color:#000000
+    style IF3 fill:#d4e8f7,color:#000000
+    style CW1 fill:#e8d4f7,color:#000000
+    style CW2 fill:#e8d4f7,color:#000000
+    style CW3 fill:#e8d4f7,color:#000000
+    style LV1 fill:#d4f0e0,color:#000000
+    style LV2 fill:#d4f0e0,color:#000000
+    style LV3 fill:#d4f0e0,color:#000000
+    style SE1 fill:#f7e8d4,color:#000000
+    style SE2 fill:#f7e8d4,color:#000000
+    style SE3 fill:#f7e8d4,color:#000000
 ```
 
 ---
@@ -443,11 +465,11 @@ graph TD
     C --> D[Defenses Must Be Multi-Layered]
     D --> E[Awareness is First Step]
     
-    style A fill:#ff6b6b
-    style B fill:#feca57
-    style C fill:#ff9ff3
-    style D fill:#54a0ff
-    style E fill:#5f27cd
+    style A fill:#ff6b6b,color:#000000
+    style B fill:#feca57,color:#000000
+    style C fill:#ff9ff3,color:#000000
+    style D fill:#54a0ff,color:#ffffff
+    style E fill:#5f27cd,color:#ffffff
 ```
 
 ### Key Takeaways
