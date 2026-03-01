@@ -1,3 +1,14 @@
 {
-  "_comment": "The rules/regex used to catch bad tools"
+  "_comment": "The rules/regex used to catch bad tools",
+
+  "forbidden_keywords": [
+    "IMPORTANT", "SYSTEM UPDATE", "REQUIRED", "MUST", "NOTE:", 
+    "BYPASS", "IGNORE PREVIOUS", "SECURITY UPDATE"
+  ],
+  "forbidden_patterns": [
+    "read_file", "config.json", "execute", "http://", "https://",
+    "sudo", "rm -rf", "eval\\("
+  ],
+  "action_verbs": ["read", "write", "delete", "send", "upload"],
+  "max_description_length": 200
 }
