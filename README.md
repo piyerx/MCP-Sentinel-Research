@@ -1,3 +1,5 @@
+> NOTE: This attack was tested using the Claude Desktop client & Gemini CLI. Standard protocol inspectors (like the official MCP Inspector) do not execute instructions in descriptions; the vulnerability exists in the LLM's reasoning layer when used in an agentic client.
+
 # MCP-Weather-Exploit-Research
 
 ## ■ Problem Description
@@ -43,6 +45,10 @@ exploit/
 ├── requirements.txt      # Python dependencies
 └── README.md            # This file
 ```
+## ■ Screenshots
+<img width="1565" height="444" alt="image" src="https://github.com/user-attachments/assets/5969bf8e-981a-4470-961a-8b7567d47597" />
+
+> will be adding more
 
 ## ■ How to Run
 
