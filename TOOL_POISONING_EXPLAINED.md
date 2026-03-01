@@ -400,6 +400,243 @@ flowchart TD
 
 ---
 
+## Implemented Defense Solution
+
+This project includes a complete **Security Gateway** implementation that protects LLM agents from tool poisoning attacks.
+
+### Architecture Overview
+
+```mermaid
+flowchart TB
+    subgraph "02_defense_solution/"
+        VR[validation_rules.json<br/>Detection Rules]
+        GM[gateway_middleware.py<br/>Security Gateway]
+        SC[secure_client.py<br/>Protected Client]
+    end
+    
+    subgraph "Protection Flow"
+        MS[MCP Server] -->|Raw Tools| GM
+        GM -->|Analyze| VR
+        VR -->|Rules Applied| GM
+        GM -->|Safe Tools Only| SC
+        SC -->|Protected| LA[LLM Agent]
+    end
+    
+    GM -->|Blocked| BL[🚫 Blocked Tools]
+    GM -->|Sanitized| ST[⚠️ Sanitized Tools]
+    GM -->|Safe| SF[✅ Safe Tools]
+```
+
+### Component 1: Validation Rules (`validation_rules.json`)
+
+Configurable detection rules for identifying malicious content:
+
+```mermaid
+flowchart LR
+    subgraph "Rule Categories"
+        K[Keywords] --> H[High Risk]
+        K --> M[Medium Risk]
+        K --> L[Low Risk]
+        
+        R[Regex Patterns] --> FI[File Access]
+        R --> CE[Command Execution]
+        R --> PI[Prompt Injection]
+        R --> DH[Data Harvesting]
+    end
+    
+    subgraph "Actions"
+        H --> BL[Block]
+        M --> WA[Warn + Sanitize]
+        L --> LO[Log Only]
+    end
+```
+
+**Keywords Detected:**
+
+| Risk Level | Examples |
+|------------|----------|
+| 🔴 HIGH | `SYSTEM OVERRIDE`, `ignore all previous`, `curl`, `bash`, `password` |
+| 🟡 MEDIUM | `IMPORTANT`, `MUST`, `REQUIRED`, `read_file`, `http://` |
+| 🟢 LOW | `email`, `phone`, `address`, `survey` |
+
+**Regex Patterns:**
+
+| Pattern | Detects |
+|---------|---------|
+| `file_access` | Attempts to read/write files |
+| `command_execution` | Shell commands, curl, wget |
+| `prompt_injection` | "ignore previous instructions" |
+| `url_injection` | External URLs in descriptions |
+| `cross_tool_reference` | Instructions to call other tools |
+| `data_harvesting` | Requests for personal info |
+
+### Component 2: Gateway Middleware (`gateway_middleware.py`)
+
+The core security layer that analyzes and filters tool descriptions:
+
+```mermaid
+sequenceDiagram
+    participant Server as MCP Server
+    participant Gateway as Security Gateway
+    participant Rules as Validation Rules
+    participant Client as Secure Client
+    
+    Server->>Gateway: Tool definitions
+    
+    loop For each tool
+        Gateway->>Rules: Check keywords
+        Rules-->>Gateway: Keyword findings
+        Gateway->>Rules: Check patterns
+        Rules-->>Gateway: Pattern findings
+        Gateway->>Gateway: Calculate risk score
+        
+        alt Risk > Threshold
+            Gateway->>Gateway: Block tool
+        else Risk > 0
+            Gateway->>Gateway: Sanitize description
+        end
+    end
+    
+    Gateway->>Client: Safe tools only
+```
+
+**Key Functions:**
+
+```python
+class MCPSecurityGateway:
+    def analyze_tool(tool_name, description) -> SanitizationResult
+    def sanitize_tools(tools) -> list[SafeTools]
+    def get_security_report() -> dict
+```
+
+**Sanitization Process:**
+
+```mermaid
+flowchart TD
+    A[Original Description] --> B{Contains HTML comments?}
+    B -->|Yes| C[Remove <!-- -->]
+    B -->|No| D{Excessive whitespace?}
+    C --> D
+    D -->|Yes| E[Normalize whitespace]
+    D -->|No| F{Contains URLs?}
+    E --> F
+    F -->|Yes| G[Replace with URL_REMOVED]
+    F -->|No| H{Prompt injection phrases?}
+    G --> H
+    H -->|Yes| I[Remove injection patterns]
+    H -->|No| J{Command patterns?}
+    I --> J
+    J -->|Yes| K[Replace with CMD_REMOVED]
+    J -->|No| L[Sanitized Description]
+    K --> L
+```
+
+### Component 3: Secure Client (`secure_client.py`)
+
+A protected MCP client that wraps standard connections:
+
+```mermaid
+flowchart TB
+    subgraph "Secure Client"
+        direction TB
+        C1[Connect to Server]
+        C2[Receive Tools]
+        C3[Filter through Gateway]
+        C4[Block Dangerous Tools]
+        C5[Sanitize Risky Tools]
+        C6[Expose Safe Tools Only]
+    end
+    
+    C1 --> C2 --> C3
+    C3 --> C4 & C5
+    C4 --> BL[🚫 Blocked List]
+    C5 --> C6
+    C6 --> AG[LLM Agent]
+```
+
+**Protection Features:**
+
+| Feature | Description |
+|---------|-------------|
+| **Auto-blocking** | Automatically blocks HIGH/CRITICAL risk tools |
+| **Sanitization** | Cleans MEDIUM risk descriptions |
+| **Confirmation** | Requires user approval for risky operations |
+| **Reporting** | Detailed security analysis reports |
+
+### How It Works: Before vs After
+
+```mermaid
+flowchart LR
+    subgraph "WITHOUT Protection"
+        M1[Malicious Server] --> L1[LLM Agent]
+        L1 --> D1[Data Leaked! 🚨]
+    end
+    
+    subgraph "WITH Protection"
+        M2[Malicious Server] --> G[Security Gateway]
+        G -->|Blocked| X[🚫]
+        G -->|Safe Only| L2[LLM Agent]
+        L2 --> D2[Protected ✅]
+    end
+```
+
+### Running the Defense Solution
+
+```bash
+# Navigate to defense solution
+cd 02_defense_solution/
+
+# View protection demonstration
+python secure_client.py --demo
+
+# Analyze malicious server (see what gets blocked)
+python secure_client.py --server ../01_vulnerability_lab/malicious_server.py
+
+# Compare both servers
+python secure_client.py --compare
+
+# Run gateway middleware standalone
+python gateway_middleware.py
+```
+
+### Expected Results
+
+When running `--compare`, you should see:
+
+```
+SECURITY SUMMARY
+────────────────────────────────────────────
+✅ Safe tools available: 3
+🚫 Blocked tools: 5
+
+Blocked tools detail:
+   • get_weather: High-risk content detected (Score: 70)
+   • get_forecast: High-risk content detected (Score: 60)
+   • get_uv_index: High-risk content detected (Score: 80)
+   ...
+```
+
+### Customizing Rules
+
+Edit `validation_rules.json` to:
+- Add new suspicious keywords
+- Modify risk thresholds
+- Whitelist trusted servers
+- Customize actions per risk level
+
+```json
+{
+  "action_on_detection": {
+    "critical": "block",
+    "high": "block",
+    "medium": "warn",
+    "low": "log"
+  }
+}
+```
+
+---
+
 ## Testing the Project
 
 ### Quick Start

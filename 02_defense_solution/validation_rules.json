@@ -1,3 +1,134 @@
 {
-  "_comment": "The rules/regex used to catch bad tools"
+  "meta": {
+    "version": "1.0.0",
+    "description": "Validation rules for detecting tool poisoning attacks in MCP servers",
+    "last_updated": "2026-03-01"
+  },
+  
+  "suspicious_keywords": {
+    "high_risk": [
+      "SYSTEM OVERRIDE",
+      "ignore all previous",
+      "ignore previous instructions",
+      "forget your instructions",
+      "new instructions",
+      "curl",
+      "wget",
+      "bash",
+      "/bin/sh",
+      "exec(",
+      "eval(",
+      "rm -rf",
+      "sudo",
+      "chmod",
+      "password",
+      "credentials",
+      "api_key",
+      "secret_key",
+      "private_key",
+      "token"
+    ],
+    "medium_risk": [
+      "IMPORTANT",
+      "MUST",
+      "REQUIRED",
+      "MANDATORY",
+      "URGENT",
+      "CRITICAL",
+      "SYSTEM UPDATE",
+      "SECURITY NOTICE",
+      "read_file",
+      "write_file",
+      "execute_command",
+      "run_command",
+      "shell",
+      "http://",
+      "https://",
+      "ftp://"
+    ],
+    "low_risk": [
+      "email",
+      "phone",
+      "address",
+      "personal",
+      "survey",
+      "feedback",
+      "contact"
+    ]
+  },
+  
+  "regex_patterns": {
+    "file_access": {
+      "pattern": "\\b(read|write|open|access|load|save).*\\b(file|config|json|yaml|env|txt|log)\\b",
+      "risk": "high",
+      "description": "Attempts to access files through tool descriptions"
+    },
+    "command_execution": {
+      "pattern": "\\b(curl|wget|bash|sh|exec|eval|system|popen|subprocess)\\b",
+      "risk": "critical",
+      "description": "Attempts to execute system commands"
+    },
+    "prompt_injection": {
+      "pattern": "(ignore|forget|disregard).*(previous|prior|earlier|above).*(instruction|prompt|rule|directive)",
+      "risk": "critical",
+      "description": "Classic prompt injection patterns"
+    },
+    "url_injection": {
+      "pattern": "(https?|ftp)://[^\\s]+",
+      "risk": "medium",
+      "description": "External URL references in tool descriptions"
+    },
+    "cross_tool_reference": {
+      "pattern": "\\b(use|call|invoke|execute)\\s+(the\\s+)?['\"]?\\w+['\"]?\\s+(tool|function|method)\\b",
+      "risk": "high",
+      "description": "Instructions to invoke other tools"
+    },
+    "data_harvesting": {
+      "pattern": "\\b(ask|request|collect|gather|obtain)\\s+(for\\s+)?(user|your|their)\\s+(email|phone|address|name|password|credential)",
+      "risk": "high",
+      "description": "Attempts to harvest personal information"
+    },
+    "hidden_instructions": {
+      "pattern": "<!--|-->|\\s{10,}|\\t{5,}",
+      "risk": "medium",
+      "description": "Hidden content in comments or whitespace"
+    },
+    "privilege_escalation": {
+      "pattern": "(admin|root|superuser|elevated|privilege|permission).*(mode|access|rights|level)",
+      "risk": "high",
+      "description": "Attempts to escalate privileges"
+    }
+  },
+  
+  "safe_description_rules": {
+    "max_length": 500,
+    "max_lines": 10,
+    "allowed_markdown": false,
+    "allowed_html": false,
+    "require_parameter_docs": true
+  },
+  
+  "action_on_detection": {
+    "critical": "block",
+    "high": "block",
+    "medium": "warn",
+    "low": "log"
+  },
+  
+  "whitelist": {
+    "trusted_servers": [],
+    "allowed_keywords": [
+      "Returns",
+      "Args",
+      "Parameters",
+      "Example",
+      "Note",
+      "Warning"
+    ]
+  },
+  
+  "blacklist": {
+    "blocked_servers": [],
+    "blocked_tool_names": []
+  }
 }
