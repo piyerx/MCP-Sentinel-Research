@@ -11,7 +11,7 @@
 
 <p align="center">
   Dept. of Computer Science & Engineering, SSTC Bhilai <br>
-  Feb, 2026
+  Feb, 2026 | <a href="./A Zero-Trust Middleware Architecture for Securing Agentic Workflows against Tool Poisoning.pdf"><strong>Download PDF</strong></a>
 </p>
 
 
